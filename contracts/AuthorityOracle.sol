@@ -21,16 +21,31 @@ contract AuthorityOracle {
         _;
     }
 
-    function isAuthorized(address _address) public returns(bool) {
+    function isAuthorized(address _address) view public returns(bool) {
+        for (uint i = 0; 0 < authorized.length; i++) {
+            if (authorized[i] == _address) {
+                return true;
+            }
+        }
         return false;
     }
 
-    function isProducer(address _address) public {
-
+    function isProducer(address _address) view public returns(bool) {
+        for (uint i = 0; 0 < producers.length; i++) {
+            if (producers[i] == _address) {
+                return true;
+            }
+        }
+        return false;
     }
 
-    function isTrader(address _address) public {
-
+    function isTrader(address _address) view public returns(bool) {
+        for (uint i = 0; 0 < traders.length; i++) {
+            if (traders[i] == _address) {
+                return true;
+            }
+        }
+        return false;
     }
 
     function addToAuthorized(address _address) isOwner public {

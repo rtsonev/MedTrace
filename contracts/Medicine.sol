@@ -1,9 +1,11 @@
 pragma solidity ^0.4.18;
 
+import "./AuthorityOracle.sol";
+
 
 contract Medicine {
 
-    address authorityOracle;
+    AuthorityOracle authorityOracle;
 
     enum Forms {
         Powder,
@@ -51,7 +53,7 @@ contract Medicine {
     mapping (bytes32 => bytes32) public documents;
 
     function Medicine(address _authorityOracle) public {
-        authorityOracle = _authorityOracle;
+        authorityOracle = AuthorityOracle(_authorityOracle);
         currentOwner = msg.sender;
         producer = msg.sender;
         productionDate = now;
@@ -80,8 +82,7 @@ contract Medicine {
     }
 
     modifier isAuthorized(address _address) {
-        bool _isAuthorized = authorityOracle.call(bytes4(sha3("isAuthorized(address)")), _address);
-        require(_isAuthorized);
+        require(authorityOracle.isAuthorized(_address));
         _;
     }
 
@@ -116,7 +117,7 @@ contract Medicine {
     }
 
     function getTransactions() isAuthorized(msg.sender) public returns(string) {
-        return "test";
+        return "kurac";
     }
 
     function destroy() private {
