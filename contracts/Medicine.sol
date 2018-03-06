@@ -3,6 +3,8 @@ pragma solidity ^0.4.18;
 
 contract Medicine {
 
+    address authorityOracle;
+
     enum Forms {
         Powder,
         Tablet,
@@ -48,7 +50,8 @@ contract Medicine {
 
     mapping (bytes32 => bytes32) public documents;
 
-    function Medicine() public {
+    function Medicine(address _authorityOracle) public {
+        authorityOracle = _authorityOracle;
         currentOwner = msg.sender;
         producer = msg.sender;
         productionDate = now;
@@ -71,12 +74,14 @@ contract Medicine {
         _;
     }
 
-    modifier isAthority() {
+    modifier canDestroy() {
+        require(msg.sender == producer);
         _;
     }
 
-    modifier canDestroy() {
-        require(msg.sender == producer);
+    modifier isAuthorized(address _address) {
+        bool _isAuthorized = authorityOracle.call(bytes4(sha3("isAuthorized(address)")), _address);
+        require(_isAuthorized);
         _;
     }
 
@@ -108,6 +113,10 @@ contract Medicine {
         setPrice(getPrice());
         // new owner should not know the sell percent of previous owner
         setSellPercent(1);
+    }
+
+    function getTransactions() isAuthorized(msg.sender) public returns(string) {
+        return "test";
     }
 
     function destroy() private {
