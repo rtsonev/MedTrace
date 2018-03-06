@@ -116,8 +116,25 @@ contract Medicine {
         setSellPercent(1);
     }
 
-    function getTransactions() isAuthorized(msg.sender) public returns(string) {
-        return "kurac";
+    function getTransactions()
+    view public
+    isAuthorized(msg.sender)
+    returns(address[] buyers, address[] sellers, uint[] prices, uint[] dates) {
+
+        address[] memory _buyers = new address[](transactions.length);
+        address[] memory _sellers = new address[](transactions.length);
+        uint[] memory _prices = new uint[](transactions.length);
+        uint[] memory _dates = new uint[](transactions.length);
+
+        for (uint i = 0; i < transactions.length; i++) {
+            TransactionInfo storage transactionInfo = transactions[i];
+            _buyers[i] = transactionInfo.buyer;
+            _sellers[i] = transactionInfo.seller;
+            _prices[i] = transactionInfo.price;
+            _dates[i] = transactionInfo.date;
+        }
+
+        return (_buyers, _sellers, _prices, _dates);
     }
 
     function destroy() private {
