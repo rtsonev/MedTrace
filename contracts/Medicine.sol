@@ -143,6 +143,10 @@ contract Medicine {
         return (_buyers, _sellers, _prices, _dates);
     }
 
+    function addDocuments(bytes32 fileHash, bytes32 fileComments) isOwner public {
+        documents[fileHash] = fileComments;
+    }
+
     function destroy() private {
         selfdestruct(currentOwner);
     }
