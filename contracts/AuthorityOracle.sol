@@ -9,6 +9,8 @@ contract AuthorityOracle {
 
     address[] public traders;
 
+    address[] public pharmacies;
+
     address private owner;
 
     function AuthorityOracle() public {
@@ -48,6 +50,15 @@ contract AuthorityOracle {
         return false;
     }
 
+    function isPharmacy(address _address) view public returns(bool) {
+        for (uint i = 0; 0 < pharmacies.length; i++) {
+            if (pharmacies[i] == _address) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     function addToAuthorized(address _address) isOwner public {
         authorized.push(_address);
     }
@@ -58,5 +69,9 @@ contract AuthorityOracle {
 
     function addToTraders(address _address) isOwner public {
         traders.push(_address);
+    }
+
+    function addToPharmacies(address _address) isOwner public {
+        pharmacies.push(_address);
     }
 }

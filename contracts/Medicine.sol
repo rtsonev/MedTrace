@@ -34,17 +34,13 @@ contract Medicine {
 
     bytes32 public name;
 
-    bytes15 public strength;
-
-    bytes7 public packSize;
-
     bytes32 public batchNumber;
+
+    bytes32 public id;
 
     uint public expirationDate;
 
     uint public productionDate;
-
-    bytes15 public origin;
 
     uint private price;
 
@@ -52,17 +48,26 @@ contract Medicine {
 
     mapping (bytes32 => bytes32) public documents;
 
-    function Medicine(address _authorityOracle) public {
+    function Medicine(address _addressToCheck, address _authorityOracle, Forms _form,
+        bytes32 _name, bytes32 _batchNumber, bytes32 _id, uint _expirationDate, uint _price)
+    public {
         authorityOracle = AuthorityOracle(_authorityOracle);
+        require(authorityOracle.isProducer(_addressToCheck));
         currentOwner = msg.sender;
         producer = msg.sender;
         productionDate = now;
+        form = _form;
+        name = _name;
+        batchNumber = _batchNumber;
+        id = _id;
+        expirationDate = _expirationDate;
+        price = _price;
     }
 
-    function getMedInfo() public pure
-    returns(address currentOwner, address producer, Forms form, uint sellDate, bytes32 name, bytes15 strength, bytes7 packSize,
-        bytes32 batchNumber, uint expirationDate, uint productionDate, bytes15 origin, uint price) {
-        return (currentOwner, producer, form, sellDate, name, strength, packSize, batchNumber, expirationDate, productionDate, origin, price);
+    function getMedInfo() public view
+    returns(address _currentOwner, address _producer, Forms _form, uint _sellDate, bytes32 _name,
+        bytes32 _batchNumber, bytes32 _id, uint _expirationDate, uint _productionDate, uint _price) {
+        return (currentOwner, producer, form, sellDateFromProducer, name, batchNumber, id, expirationDate, productionDate, price);
     }
 
     modifier isOwner() {
@@ -101,6 +106,7 @@ contract Medicine {
     function buyMedicine() canBuy() public payable  {
         currentOwner.transfer(this.balance);
         if (currentOwner == producer) {
+            require(authorityOracle.isProducer(currentOwner));
             sellDateFromProducer = now;
         }
         // add to history of transactions
