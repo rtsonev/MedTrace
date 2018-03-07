@@ -62,6 +62,7 @@ contract Medicine {
         id = _id;
         expirationDate = _expirationDate;
         price = _price;
+        sellPercent = 1;
     }
 
     function getMedInfo() public view
