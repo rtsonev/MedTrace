@@ -1,0 +1,16 @@
+{
+  "name": "med_trace",
+  "version": "1.0.0",
+  "description": "This app is for tracing history of medicine transactions",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "author": "Rostislav Tsonev",
+  "license": "MIT",
+  "dependencies": {
+    "ipfs-api": "^18.1.1",
+    "npm": "^5.7.1"
+  },
+  "devDependencies": {}
+}

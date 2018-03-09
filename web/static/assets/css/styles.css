@@ -1,0 +1,27 @@
+div.header_content{
+  border-bottom:1px solid #eee;
+}
+
+div.page-header{
+  margin-left:auto;
+  margin-right:auto;
+}
+
+img.logo{
+  height:42px;
+  width:42px;
+}
+
+h1.company_name_logo{
+  display:inline-block;
+  cursor:pointer;
+}
+
+button.btn.btn-default{
+  margin:5px;
+}
+
+main > section {
+  display: none;
+  padding: 20px 5px;
+}
