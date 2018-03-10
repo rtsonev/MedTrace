@@ -44,6 +44,7 @@ window.App = {
   },
 
   populateAuthorityTabTables: function () {
+    this.clearStatus()
     this.getAuthorized('authority_table')
     this.getProducers('producers_table')
     this.getTraders('traders_table')
@@ -131,7 +132,7 @@ window.App = {
 
   addToAuthorized: function () {
     let self = this
-    let address = parseInt(document.getElementById('address').value)
+    let address = document.getElementById('address').value
     self.setStatus('Adding to authorized... (please wait)')
     let oracle
     AuthorityOracle.deployed().then(function (instance) {
@@ -139,7 +140,7 @@ window.App = {
       return oracle.addToAuthorized(address, { from: account })
     }).then(function () {
       self.setStatus('Successfully added to authorized addresses!')
-      this.getAuthorized('authority_table')
+      self.getAuthorized('authority_table')
     }).catch(function (e) {
       console.log(e)
       self.setStatus('Error while adding to authorized addresses. See log.')
@@ -147,16 +148,46 @@ window.App = {
   },
 
   addToProducers: function () {
-
+    let self = this
+    let address = document.getElementById('address').value
+    self.setStatus('Adding to producers... (please wait)')
+    let oracle
+    AuthorityOracle.deployed().then(function (instance) {
+      oracle = instance
+      return oracle.addToProducers(address, { from: account })
+    }).then(function () {
+      self.setStatus('Successfully added to producer addresses!')
+      self.getProducers('producers_table')
+    }).catch(function (e) {
+      console.log(e)
+      self.setStatus('Error while adding to producer addresses. See log.')
+    })
   },
 
   addToTraders: function () {
-
+    let self = this
+    let address = document.getElementById('address').value
+    self.setStatus('Adding to traders... (please wait)')
+    let oracle
+    AuthorityOracle.deployed().then(function (instance) {
+      oracle = instance
+      return oracle.addToTraders(address, { from: account })
+    }).then(function () {
+      self.setStatus('Successfully added to traders addresses!')
+      self.getTraders('traders_table')
+    }).catch(function (e) {
+      console.log(e)
+      self.setStatus('Error while adding to traders addresses. See log.')
+    })
   },
 
   setStatus: function (message) {
     let status = document.getElementById('status')
     status.innerHTML = message
+  },
+
+  clearStatus: function () {
+    document.getElementById('status').innerHTML = ""
   }
 }
 
