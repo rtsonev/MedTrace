@@ -1,6 +1,8 @@
 import '../stylesheets/styles.css'
 import { default as Web3 } from 'web3'
 import { default as contract } from 'truffle-contract'
+import { default as ipfsAPI} from 'ipfs-api'
+import { default as buffer} from 'buffer'
 
 import authorityOracleArtifacts from '../../build/contracts/AuthorityOracle.json'
 import medTraceArtifacts from '../../build/contracts/MedTrace.json'
@@ -11,6 +13,7 @@ let MedTrace = contract(medTraceArtifacts)
 let Medicine = contract(medicineArtifacts)
 let accounts
 let account
+let ipfs = ipfsAPI('localhost', '5001', {protocol: 'http'})
 
 window.App = {
 
@@ -29,16 +32,13 @@ window.App = {
       }
 
       if (accs.length == 0) {
-        alert('Couldn\'t get any accounts!')
+        alert('Could not get any accounts!')
         return
       }
 
       accounts = accs
       account = accounts[0]
-
       console.log(accounts)
-
-      // self.refreshBalance();
       self.populateAuthorityTabTables()
     })
   },
@@ -168,10 +168,8 @@ window.App = {
     let self = this
     let address = document.getElementById('address').value
     self.setStatus('Adding to traders... (please wait)')
-    let oracle
     AuthorityOracle.deployed().then(function (instance) {
-      oracle = instance
-      return oracle.addToTraders(address, { from: account })
+      return instance.addToTraders(address, { from: account })
     }).then(function () {
       self.setStatus('Successfully added to traders addresses!')
       self.getTraders('traders_table')
@@ -188,10 +186,49 @@ window.App = {
 
   clearStatus: function () {
     document.getElementById('status').innerHTML = ""
+  },
+
+  createMed: function (docHash) {
+    let self = this
+    let name = document.getElementById('name').value
+    let batchNumber = document.getElementById('batch_number').value
+    let id = document.getElementById('id').value
+    let form = document.getElementById('form').value
+    let expirationDate = document.getElementById('exp_date').value
+    let price = document.getElementById('price').value
+    let docComments = document.getElementById('doc_comments').value
+    self.setStatus('Submitting information about produced medicine... (please wait)')
+    MedTrace.deployed().then(function (instance) {
+      return instance.produceMed(form, name, batchNumber, id, new Date(expirationDate).getTime(), price, docHash, docComments, { from: account })
+    }).then(function () {
+      self.setStatus('Successfully added information about produced medicine!')
+    }).catch(function (e) {
+      console.log(e)
+      self.setStatus('Error while adding information. See log.')
+    })
+  },
+
+  produce: function () {
+    let self = this
+    let reader = new FileReader()
+    reader.onloadend = function () {
+      let buf = buffer.Buffer(reader.result)
+      ipfs.files.add(buf, (err, result) => {
+        if (err) {
+          console.error(err)
+        } else {
+          self.createMed(result[0].hash)
+        }
+      })
+    }
+    const doc = document.getElementById('doc')
+    reader.readAsArrayBuffer(doc.files[0]);
   }
+
 }
 
 window.addEventListener('load', function () {
+
   // Checking if Web3 has been injected by the browser (MetaMask) if not use testrpc in this case
   if (typeof web3 !== 'undefined') {
     console.warn('Using web3 detected from external source.')

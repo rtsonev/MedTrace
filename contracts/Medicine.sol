@@ -7,14 +7,6 @@ contract Medicine {
 
     AuthorityOracle authorityOracle;
 
-    enum Forms {
-        Powder,
-        Tablet,
-        Caps,
-        Vial,
-        InfusionForInjection
-    }
-
     struct TransactionInfo {
         address buyer;
         address seller;
@@ -28,7 +20,7 @@ contract Medicine {
 
     TransactionInfo[] private transactions;
 
-    Forms public form;
+    bytes16 public form;
 
     uint public sellDateFromProducer;
 
@@ -46,10 +38,13 @@ contract Medicine {
 
     uint8 private sellPercent;
 
-    mapping (bytes32 => bytes32) public documents;
+    bytes32 docHash;
 
-    function Medicine(address _addressToCheck, address _authorityOracle, Forms _form,
-        bytes32 _name, bytes32 _batchNumber, bytes32 _id, uint _expirationDate, uint _price)
+    bytes32 docComment;
+
+    function Medicine(address _addressToCheck, address _authorityOracle, bytes16 _form,
+        bytes32 _name, bytes32 _batchNumber, bytes32 _id, uint _expirationDate, uint _price,
+        bytes32 _docHash, bytes32 _docComment)
     public {
         authorityOracle = AuthorityOracle(_authorityOracle);
         require(authorityOracle.isProducer(_addressToCheck));
@@ -63,12 +58,16 @@ contract Medicine {
         expirationDate = _expirationDate;
         price = _price;
         sellPercent = 1;
+        docHash = _docHash;
+        docComment = _docComment;
     }
 
     function getMedInfo() public view
-    returns(address _currentOwner, address _producer, Forms _form, uint _sellDate, bytes32 _name,
-        bytes32 _batchNumber, bytes32 _id, uint _expirationDate, uint _productionDate, uint _price) {
-        return (currentOwner, producer, form, sellDateFromProducer, name, batchNumber, id, expirationDate, productionDate, price);
+    returns(address _currentOwner, address _producer, bytes16 _form, uint _sellDate, bytes32 _name,
+        bytes32 _batchNumber, bytes32 _id, uint _expirationDate, uint _productionDate, uint _price,
+        bytes32 _docHash, bytes32 _docComment) {
+        return (currentOwner, producer, form, sellDateFromProducer, name, batchNumber,
+            id, expirationDate, productionDate, price, docHash, docComment);
     }
 
     modifier isOwner() {
@@ -142,10 +141,6 @@ contract Medicine {
         }
 
         return (_buyers, _sellers, _prices, _dates);
-    }
-
-    function addDocuments(bytes32 fileHash, bytes32 fileComments) isOwner public {
-        documents[fileHash] = fileComments;
     }
 
     function destroy() private {

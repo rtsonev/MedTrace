@@ -16,6 +16,7 @@
 </div>
 <div class="tab">
     <button class="tablinks" onclick="App.openTab(event, 'medicine_information')">Medicine Information</button>
+    <button class="tablinks" onclick="App.openTab(event, 'buy_med')">Buy Med</button>
     <button class="tablinks" onclick="App.openTab(event, 'produce_med')">Produce Med</button>
     <button class="tablinks" onclick="App.openTab(event, 'authority')">Authority</button>
 </div>
@@ -26,16 +27,50 @@
     <p>London is the capital city of England.</p>
 </div>
 
+<div id="buy_med" class="tabcontent">
+    <h3>Kurac </h3>
+    <p>gzghzhzh.</p>
+    <button id="kurac" onclick="App.test()">Submit</button>
+    <strong>Photo:</strong>
+    <input type="file"  class="form-control-file" id="photo">
+</div>
+
 <div id="produce_med" class="tabcontent">
-    <h3>Paris</h3>
-    <p>Paris is the capital of France.</p>
+    <h3>Enter information about the medicine you have produced.</h3>
+    <br>
+    <div>
+        <form>
+            Name:<br>
+            <input type="text" id="name">
+            <br>
+            Batch Number:<br>
+            <input type="text" id="batch_number">
+            <br>
+            Id:<br>
+            <input type="text" id="id">
+            <br>
+            Form:<br>
+            <input type="text" id="form">
+            <br>
+            Expiration Date:<br>
+            <input type="date" id="exp_date">
+            <br>
+            Price:<br>
+            <input type="number" id="price">
+            <br><br>
+            Related Doc:
+            <input type="file" id="doc">
+            <br>
+            Doc Comments:<br>
+            <input type="text" id="doc_comments">
+            <br><br><br>
+        </form>
+        <button id="produce_submit" onclick="App.produce()">Submit</button>
+    </div>
+
 </div>
 
 <div id="authority" class="tabcontent">
-    <div>
-        <strong><span id="status"></span></strong>
-    </div>
-    <br>
     <button id="send" onclick="App.populateAuthorityTabTables()">Refresh</button>
     <div>
         <br>
@@ -45,18 +80,21 @@
         <button id="add_producer" onclick="App.addToProducers()">Add to Producers</button>
         <button id="add_trader" onclick="App.addToTraders()">Add to Traders</button>
     </div>
+    <br>
     <h3>Table showing addresses authorized for transactions check.</h3>
     <table id="authority_table" style="width:100%">
         <tr>
             <th>Authorized</th>
         </tr>
     </table>
+    <br>
     <h3>Table showing addresses authorized for producing meds.</h3>
     <table id="producers_table" style="width:100%">
         <tr>
             <th>Producers</th>
         </tr>
     </table>
+    <br>
     <h3>Table showing addresses authorized for trading meds.</h3>
     <table id="traders_table" style="width:100%">
         <tr>
@@ -65,5 +103,10 @@
     </table>
 </div>
 </body>
+
+<br>
+<div>
+    <strong><span id="status"></span></strong>
+</div>
 
 </html>
