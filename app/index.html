@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <title>MedInfo</title>
+    <script src="./app.js"></script>
+</head>
+
+<body>
+<div class="page-header">
+    <h1 class="text-nowrap text-info company_name_logo"><strong>MedTrace </strong><img src="./meds.png" class="logo">
+    </h1>
+</div>
+<div class="tab">
+    <button class="tablinks" onclick="App.openTab(event, 'medicine_information')">Medicine Information</button>
+    <button class="tablinks" onclick="App.openTab(event, 'produce_med')">Produce Med</button>
+    <button class="tablinks" onclick="App.openTab(event, 'authority')">Authority</button>
+</div>
+
+<!-- Tabs content -->
+<div id="medicine_information" class="tabcontent">
+    <h3>London</h3>
+    <p>London is the capital city of England.</p>
+</div>
+
+<div id="produce_med" class="tabcontent">
+    <h3>Paris</h3>
+    <p>Paris is the capital of France.</p>
+</div>
+
+<div id="authority" class="tabcontent">
+    <div>
+        <strong><span id="status"></span></strong>
+    </div>
+    <br>
+    <button id="send" onclick="App.populateAuthorityTabTables()">Refresh</button>
+    <div>
+        <br>
+        <label for="address">Address: </label>
+        <input type="text" id="address" placeholder="e.g., 0x93e66d9baea28c17d9fc393b53e3fbdd76899dae"></input>
+        <button id="add_authorized" onclick="App.addToAuthorized()">Add to Authorized</button>
+        <button id="add_producer" onclick="App.addToProducers()">Add to Authorized</button>
+        <button id="add_trader" onclick="App.addToTraders()">Add to Authorized</button>
+    </div>
+    <h3>Table showing addresses authorized for transactions check.</h3>
+    <table id="authority_table" style="width:100%">
+        <tr>
+            <th>Authorized</th>
+        </tr>
+    </table>
+    <h3>Table showing addresses authorized for producing meds.</h3>
+    <table id="producers_table" style="width:100%">
+        <tr>
+            <th>Producers</th>
+        </tr>
+    </table>
+    <h3>Table showing addresses authorized for trading meds.</h3>
+    <table id="traders_table" style="width:100%">
+        <tr>
+            <th>Traders</th>
+        </tr>
+    </table>
+</div>
+</body>
+
+</html>

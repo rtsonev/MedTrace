@@ -1,4 +1,4 @@
-pragma solidity ^0.4.18;
+pragma solidity ^0.4.19;
 
 
 contract AuthorityOracle {
@@ -12,6 +12,22 @@ contract AuthorityOracle {
     address[] public pharmacies;
 
     address private owner;
+
+    function getProducers() public view returns(address[]) {
+        return producers;
+    }
+
+    function getAuthorized() public view returns(address[]) {
+        return authorized;
+    }
+
+    function getTraders() public view returns(address[]) {
+        return traders;
+    }
+
+    function getPharmacies() public view returns(address[]) {
+        return pharmacies;
+    }
 
     function AuthorityOracle() public {
         owner = msg.sender;
