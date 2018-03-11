@@ -8,8 +8,8 @@ contract MedTrace {
 
     AuthorityOracle authorityOracle;
 
-    mapping(bytes32=>Medicine) medicine;
-    mapping(bytes32=>mapping(bytes32=>Medicine)) public meds;
+    mapping(uint=>Medicine) medicine;
+    mapping(uint=>mapping(uint=>Medicine)) public meds;
 
     function MedTrace(address _authorityOracle) public {
         authorityOracle = AuthorityOracle(_authorityOracle);
@@ -20,18 +20,14 @@ contract MedTrace {
         _;
     }
 
-    function produceMed(bytes16 _form, bytes32 _name, bytes32 _batchNumber, bytes32 _id,
-        uint _expirationDate, uint _price, bytes32 _docHash, bytes32 _docComment)
+    function produceMed(bytes16 _form, bytes16 _name, uint _batchNumber, uint _id,
+        uint _expirationDate, uint8 _price, string _docHash, bytes32 _docComment)
     isProducer(msg.sender)
     public {
         meds[_batchNumber][_id] = new Medicine(msg.sender, authorityOracle, _form, _name, _batchNumber, _id, _expirationDate, _price, _docHash, _docComment);
     }
 
-    function getMedInfo(bytes32 _batchNumber, bytes32 _id) view public {
-        meds[_batchNumber][_id].getMedInfo();
-    }
-
-    function getTest() public returns(string) {
-        return "this is a test";
+    function getMedAddress(uint _batchNumber, uint _id) view public returns(address _address) {
+        return meds[_batchNumber][_id];
     }
 }

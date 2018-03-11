@@ -24,11 +24,11 @@ contract Medicine {
 
     uint public sellDateFromProducer;
 
-    bytes32 public name;
+    bytes16 public name;
 
-    bytes32 public batchNumber;
+    uint public batchNumber;
 
-    bytes32 public id;
+    uint public id;
 
     uint public expirationDate;
 
@@ -38,18 +38,18 @@ contract Medicine {
 
     uint8 private sellPercent;
 
-    bytes32 docHash;
+    string docHash;
 
     bytes32 docComment;
 
     function Medicine(address _addressToCheck, address _authorityOracle, bytes16 _form,
-        bytes32 _name, bytes32 _batchNumber, bytes32 _id, uint _expirationDate, uint _price,
-        bytes32 _docHash, bytes32 _docComment)
+        bytes16 _name, uint _batchNumber, uint _id, uint _expirationDate, uint _price,
+        string _docHash, bytes32 _docComment)
     public {
         authorityOracle = AuthorityOracle(_authorityOracle);
         require(authorityOracle.isProducer(_addressToCheck));
-        currentOwner = msg.sender;
-        producer = msg.sender;
+        currentOwner = _addressToCheck;
+        producer = _addressToCheck;
         productionDate = now;
         form = _form;
         name = _name;
@@ -63,9 +63,9 @@ contract Medicine {
     }
 
     function getMedInfo() public view
-    returns(address _currentOwner, address _producer, bytes16 _form, uint _sellDate, bytes32 _name,
-        bytes32 _batchNumber, bytes32 _id, uint _expirationDate, uint _productionDate, uint _price,
-        bytes32 _docHash, bytes32 _docComment) {
+    returns(address _currentOwner, address _producer, bytes16 _form, uint _sellDate, bytes16 _name,
+        uint _batchNumber, uint _id, uint _expirationDate, uint _productionDate, uint _price,
+        string _docHash, bytes32 _docComment) {
         return (currentOwner, producer, form, sellDateFromProducer, name, batchNumber,
             id, expirationDate, productionDate, price, docHash, docComment);
     }

@@ -16,23 +16,27 @@
 </div>
 <div class="tab">
     <button class="tablinks" onclick="App.openTab(event, 'medicine_information')">Medicine Information</button>
-    <button class="tablinks" onclick="App.openTab(event, 'buy_med')">Buy Med</button>
     <button class="tablinks" onclick="App.openTab(event, 'produce_med')">Produce Med</button>
     <button class="tablinks" onclick="App.openTab(event, 'authority')">Authority</button>
 </div>
 
 <!-- Tabs content -->
 <div id="medicine_information" class="tabcontent">
-    <h3>London</h3>
-    <p>London is the capital city of England.</p>
-</div>
-
-<div id="buy_med" class="tabcontent">
-    <h3>Kurac </h3>
-    <p>gzghzhzh.</p>
-    <button id="kurac" onclick="App.test()">Submit</button>
-    <strong>Photo:</strong>
-    <input type="file"  class="form-control-file" id="photo">
+    <button onclick="App.initAccordions()">Refresh</button>
+    <div>
+        <br>
+        <label for="batch_num">Batch Number: </label>
+        <input type="number" id="batch_num"></input>
+        <br>
+        <label for="med_id">Med Id: </label>
+        <input type="number" id="med_id"></input>
+        <br><br>
+        <button id="search_batch_number" onclick="App.searchByBatchNumber()">Search Batch</button>
+        <button id="search_both" onclick="App.searchByBoth()">Search by Batch and Med Id</button>
+    </div>
+    <h3>Shows information about medicine grouped up by batch numbers.</h3>
+    <div id="accordions_content">
+    </div>
 </div>
 
 <div id="produce_med" class="tabcontent">
@@ -44,10 +48,10 @@
             <input type="text" id="name">
             <br>
             Batch Number:<br>
-            <input type="text" id="batch_number">
+            <input type="number" id="batch_number">
             <br>
             Id:<br>
-            <input type="text" id="id">
+            <input type="number" id="id">
             <br>
             Form:<br>
             <input type="text" id="form">
@@ -71,7 +75,7 @@
 </div>
 
 <div id="authority" class="tabcontent">
-    <button id="send" onclick="App.populateAuthorityTabTables()">Refresh</button>
+    <button onclick="App.populateAuthorityTabTables()">Refresh</button>
     <div>
         <br>
         <label for="address">Address: </label>

@@ -1,8 +1,8 @@
 import '../stylesheets/styles.css'
 import { default as Web3 } from 'web3'
 import { default as contract } from 'truffle-contract'
-import { default as ipfsAPI} from 'ipfs-api'
-import { default as buffer} from 'buffer'
+import { default as ipfsAPI } from 'ipfs-api'
+import { default as buffer } from 'buffer'
 
 import authorityOracleArtifacts from '../../build/contracts/AuthorityOracle.json'
 import medTraceArtifacts from '../../build/contracts/MedTrace.json'
@@ -13,7 +13,7 @@ let MedTrace = contract(medTraceArtifacts)
 let Medicine = contract(medicineArtifacts)
 let accounts
 let account
-let ipfs = ipfsAPI('localhost', '5001', {protocol: 'http'})
+let ipfs = ipfsAPI('localhost', '5001', { protocol: 'http' })
 
 window.App = {
 
@@ -40,6 +40,7 @@ window.App = {
       account = accounts[0]
       console.log(accounts)
       self.populateAuthorityTabTables()
+      self.initAccordions()
     })
   },
 
@@ -185,17 +186,17 @@ window.App = {
   },
 
   clearStatus: function () {
-    document.getElementById('status').innerHTML = ""
+    document.getElementById('status').innerHTML = ''
   },
 
   createMed: function (docHash) {
     let self = this
     let name = document.getElementById('name').value
-    let batchNumber = document.getElementById('batch_number').value
-    let id = document.getElementById('id').value
+    let batchNumber = parseInt(document.getElementById('batch_number').value)
+    let id = parseInt(document.getElementById('id').value)
     let form = document.getElementById('form').value
     let expirationDate = document.getElementById('exp_date').value
-    let price = document.getElementById('price').value
+    let price = parseInt(document.getElementById('price').value)
     let docComments = document.getElementById('doc_comments').value
     self.setStatus('Submitting information about produced medicine... (please wait)')
     MedTrace.deployed().then(function (instance) {
@@ -222,9 +223,94 @@ window.App = {
       })
     }
     const doc = document.getElementById('doc')
-    reader.readAsArrayBuffer(doc.files[0]);
-  }
+    reader.readAsArrayBuffer(doc.files[0])
+  },
 
+  addAccordionEventListeners: function () {
+    let acc = document.getElementsByClassName('accordion')
+    let i
+    for (i = 0; i < acc.length; i++) {
+      acc[i].addEventListener('click', function () {
+        this.classList.toggle('active')
+        let panel = this.nextElementSibling
+        if (panel.style.display === 'block') {
+          panel.style.display = 'none'
+        } else {
+          panel.style.display = 'block'
+        }
+      })
+    }
+  },
+
+  parseMedInfo: function (medInfo) {
+    //  uint _sellDate, bytes32 _name,
+    //   uint _batchNumber, uint _id, uint _expirationDate, uint _productionDate, uint _price,
+    //   bytes32 _docHash, bytes32 _docComment
+    let currentOwner = medInfo[0]
+    let producer = medInfo[1]
+    let form = web3.toUtf8(medInfo[2])
+
+    let name = medInfo[4]
+    let docHash = medInfo[10]
+    let docComment = medInfo[11]
+  },
+
+  createMedInfoAccordion: function () {
+    let medInfoPanel = document.getElementById('accordions_content')
+    for (let i = 0; i < 4; i++) {
+      let batchNumberAcc = document.createElement('button')
+      batchNumberAcc.className = 'accordion'
+      batchNumberAcc.appendChild(document.createTextNode('Batch Number: '))
+      medInfoPanel.appendChild(batchNumberAcc)
+      let panel = document.createElement('div')
+      panel.className = 'panel'
+      let content = document.createElement('p')
+      content.appendChild(document.createTextNode('Meds ids in this batch: '))
+      panel.appendChild(content)
+      for (let i = 0; i < 4; i++) {
+        let idAcc = document.createElement('button')
+        idAcc.className = 'accordion'
+        idAcc.appendChild(document.createTextNode('Id: '))
+        panel.appendChild(idAcc)
+        let innerPanel = document.createElement('div')
+        innerPanel.className = 'panel'
+        let innerContent = document.createElement('p')
+        innerContent.appendChild(document.createTextNode('Medicine info goes here '))
+        panel.appendChild(innerContent)
+      }
+      medInfoPanel.appendChild(panel)
+    }
+  },
+
+  clearAllElements: function (id) {
+    let acc = document.getElementById(id)
+    while (acc.lastChild) {
+      acc.removeChild(acc.lastChild)
+    }
+  },
+
+  initAccordions: function () {
+    this.clearAllElements('accordions_content')
+    this.createMedInfoAccordion()
+    this.addAccordionEventListeners()
+  },
+
+  searchByBoth: function () {
+    let self = this
+    let batchNumber = parseInt(document.getElementById('batch_num').value)
+    let id = parseInt(document.getElementById('med_id').value)
+    MedTrace.deployed().then(function (instance) {
+      instance.getMedAddress(batchNumber, id, { from: account }).then(function (medAddress) {
+        let medicineContract = Medicine.at(medAddress)
+        medicineContract.getMedInfo.call().then(function (result) {
+          self.parseMedInfo(result)
+        }).catch(function (e) {
+          console.log(e)
+          self.setStatus('Error while getting med information. See log.')
+        })
+      })
+    })
+  }
 }
 
 window.addEventListener('load', function () {
