@@ -202,7 +202,7 @@ window.App = {
     self.setStatus('Submitting information about produced medicine... (please wait)')
     MedTrace.deployed().then(function (instance) {
       return instance.produceMed(form, name, batchNumber, id,
-        date / 1000, web3.toWei(price, 'ether'),
+        date / 1000, web3.toWei(price, 'wei'),
         docHash, docComments, { from: account })
     }).then(function () {
       self.setStatus('Successfully added information about produced medicine!')
@@ -245,42 +245,37 @@ window.App = {
     }
   },
 
-  parseMedInfo: function (medInfo) {
-    let currentOwner = medInfo[0]
-    let producer = medInfo[1]
-    let form = medInfo[2]
-    let name = medInfo[3]
-    let docHash = medInfo[4]
-    let docComment = medInfo[5]
-    let price = parseInt(medInfo[6])
-    this.createMedInfoAccordion(currentOwner, producer, form, name, docHash, docComment, price)
-  },
-
-  createMedInfoAccordion: function (currentOwner, producer, form, name, docHash, docComment, price) {
+  createMedInfoAccordion: function (medInfo) {
+    this.clearAllElements('accordions_content')
     let medInfoPanel = document.getElementById('accordions_content')
-    // for (let i = 0; i < 4; i++) {
     let batchNumberAcc = document.createElement('button')
     batchNumberAcc.className = 'accordion'
-    batchNumberAcc.appendChild(document.createTextNode('Batch Number: '))
+    batchNumberAcc.appendChild(document.createTextNode('Batch Number: ' + medInfo[9].toString()))
     medInfoPanel.appendChild(batchNumberAcc)
     let panel = document.createElement('div')
     panel.className = 'panel'
     let content = document.createElement('p')
-    content.appendChild(document.createTextNode('Meds ids in this batch: '))
+    this.createMedInfo(content, medInfo)
     panel.appendChild(content)
-    // for (let i = 0; i < 4; i++) {
-    let idAcc = document.createElement('button')
-    idAcc.className = 'accordion'
-    idAcc.appendChild(document.createTextNode('Id: '))
-    panel.appendChild(idAcc)
-    let innerPanel = document.createElement('div')
-    innerPanel.className = 'panel'
-    let innerContent = document.createElement('p')
-    innerContent.appendChild(document.createTextNode('Medicine info goes here '))
-    panel.appendChild(innerContent)
-    // }
     medInfoPanel.appendChild(panel)
-    // }
+    this.addAccordionEventListeners()
+  },
+
+  createMedInfo: function (parent, medInfo) {
+    parent.appendChild(document.createTextNode('Med Information: '))
+    parent.appendChild(document.createElement('br'))
+    parent.appendChild(document.createElement('br'))
+    parent.appendChild(document.createTextNode('name: ' + medInfo[3]))
+    parent.appendChild(document.createElement('br'))
+    parent.appendChild(document.createTextNode('form: ' + medInfo[2]))
+    parent.appendChild(document.createElement('br'))
+    parent.appendChild(document.createTextNode('current owner: ' + medInfo[0]))
+    parent.appendChild(document.createElement('br'))
+    parent.appendChild(document.createTextNode('producer: ' + medInfo[1]))
+    parent.appendChild(document.createElement('br'))
+    parent.appendChild(document.createTextNode('price: ' + medInfo[6]))
+    parent.appendChild(document.createElement('br'))
+    parent.appendChild(document.createElement('br'))
   },
 
   clearAllElements: function (id) {
@@ -302,7 +297,7 @@ window.App = {
       instance.getMedAddress(batchNumber, id, { from: account }).then(function (medAddress) {
         let medicineContract = Medicine.at(medAddress)
         medicineContract.getMedInfo.call().then(function (result) {
-          self.parseMedInfo(result)
+          self.createMedInfoAccordion(result)
         }).catch(function (e) {
           console.log(e)
           self.setStatus('Error while getting med information. See log.')
