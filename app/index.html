@@ -16,6 +16,7 @@
 </div>
 <div class="tab">
     <button class="tablinks" onclick="App.openTab(event, 'medicine_information')">Medicine Information</button>
+    <button class="tablinks" onclick="App.openTab(event, 'transactions')">Show transactions</button>
     <button class="tablinks" onclick="App.openTab(event, 'produce_med')">Produce Med</button>
     <button class="tablinks" onclick="App.openTab(event, 'authority')">Authority</button>
 </div>
@@ -34,12 +35,16 @@
         <button id="search_batch_number" onclick="App.searchByBatchNumber()">Search Batch</button>
         <button id="search_both" onclick="App.searchByBoth()">Search by Batch and Med Id</button>
     </div>
-    <h3>Shows information about medicine grouped up by batch numbers.</h3>
+    <h3>Shows information about medicine.</h3>
     <div id="accordions_content">
         <div class="panel">
             <p>test</p>
         </div>
     </div>
+</div>
+
+<div id="transactions" class="tabcontent">
+    <h3>Under construction</h3>
 </div>
 
 <div id="produce_med" class="tabcontent">
