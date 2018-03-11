@@ -20,8 +20,8 @@ contract MedTrace {
         _;
     }
 
-    function produceMed(bytes16 _form, bytes16 _name, uint _batchNumber, uint _id,
-        uint _expirationDate, uint8 _price, string _docHash, bytes32 _docComment)
+    function produceMed(string _form, string _name, uint _batchNumber, uint _id,
+        uint _expirationDate, uint _price, string _docHash, string _docComment)
     isProducer(msg.sender)
     public {
         meds[_batchNumber][_id] = new Medicine(msg.sender, authorityOracle, _form, _name, _batchNumber, _id, _expirationDate, _price, _docHash, _docComment);

@@ -20,11 +20,11 @@ contract Medicine {
 
     TransactionInfo[] private transactions;
 
-    bytes16 public form;
+    string public form;
 
     uint public sellDateFromProducer;
 
-    bytes16 public name;
+    string public name;
 
     uint public batchNumber;
 
@@ -40,11 +40,11 @@ contract Medicine {
 
     string docHash;
 
-    bytes32 docComment;
+    string docComment;
 
-    function Medicine(address _addressToCheck, address _authorityOracle, bytes16 _form,
-        bytes16 _name, uint _batchNumber, uint _id, uint _expirationDate, uint _price,
-        string _docHash, bytes32 _docComment)
+    function Medicine(address _addressToCheck, address _authorityOracle, string _form,
+        string _name, uint _batchNumber, uint _id, uint _expirationDate, uint _price,
+        string _docHash, string _docComment)
     public {
         authorityOracle = AuthorityOracle(_authorityOracle);
         require(authorityOracle.isProducer(_addressToCheck));
@@ -63,11 +63,8 @@ contract Medicine {
     }
 
     function getMedInfo() public view
-    returns(address _currentOwner, address _producer, bytes16 _form, uint _sellDate, bytes16 _name,
-        uint _batchNumber, uint _id, uint _expirationDate, uint _productionDate, uint _price,
-        string _docHash, bytes32 _docComment) {
-        return (currentOwner, producer, form, sellDateFromProducer, name, batchNumber,
-            id, expirationDate, productionDate, price, docHash, docComment);
+    returns (address, address, string, string, string, string, uint, uint, uint, uint, uint) {
+        return (currentOwner, producer, form, name, docHash, docComment, price, expirationDate, productionDate, batchNumber, id);
     }
 
     modifier isOwner() {
@@ -91,7 +88,7 @@ contract Medicine {
         _;
     }
 
-    function getPrice() view public returns(uint) {
+    function getPrice() view public returns (uint) {
         return price * sellPercent;
     }
 
@@ -103,7 +100,7 @@ contract Medicine {
         sellPercent = _value;
     }
 
-    function buyMedicine() canBuy() public payable  {
+    function buyMedicine() canBuy() public payable {
         currentOwner.transfer(this.balance);
         if (currentOwner == producer) {
             require(authorityOracle.isProducer(currentOwner));
@@ -125,7 +122,7 @@ contract Medicine {
     function getTransactions()
     view public
     isAuthorized(msg.sender)
-    returns(address[] buyers, address[] sellers, uint[] prices, uint[] dates) {
+    returns (address[] buyers, address[] sellers, uint[] prices, uint[] dates) {
 
         address[] memory _buyers = new address[](transactions.length);
         address[] memory _sellers = new address[](transactions.length);
