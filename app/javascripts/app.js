@@ -276,6 +276,10 @@ window.App = {
     parent.appendChild(document.createTextNode('price: ' + medInfo[6]))
     parent.appendChild(document.createElement('br'))
     parent.appendChild(document.createElement('br'))
+    let docLink = document.createElement('a')
+    docLink.setAttribute('href', 'https://ipfs.io/ipfs/' + medInfo[4])
+    docLink.innerHTML = medInfo[5];
+    parent.appendChild(docLink)
   },
 
   clearAllElements: function (id) {
