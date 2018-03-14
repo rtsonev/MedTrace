@@ -1,7 +1,7 @@
 # MedTrace
 
 This DApp is intended to provide traceablity of medicinie, relying on the immutability of etherium network.
-All files storage is done through IPFS.
+All files storage is done through IPFS. This Dapp uses web3 and Metamask, so its best to have it istalled.
 
 AuthorityOracle - contract responsible for allowing addresses to produce, trade, sell medicine. 
 ONLY authorized addresses gain access to transaction history of the medicine.
