@@ -8,7 +8,7 @@ ONLY authorized addresses gain access to transaction history of the medicine.
 MedTrace - main functionality - responsible for actions with medicine.
 
 1. You need ipfs daemon up and running:
-  - **ipfs daemon**
+  - '**ipfs daemon**'
 
 2. To deploy on local test network use the following commands in command prompt: 
   - **testrpc** - run testrpc on your computer
