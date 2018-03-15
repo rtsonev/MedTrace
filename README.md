@@ -17,7 +17,7 @@ MedTrace - main functionality - responsible for actions with medicine.
 3. to deploy on ropsten network you need geth client up and running:
   - geth --testnet --fast --rpc --rpcapi eth,net,web3,personal - runs geth with fast sync and connects it to ropsten network
   - geth attach http://127.0.0.1:8545 - open geth console (these are default values for geth)
-  - personal.unlockAccount(eth.accounts[0]) and personal.unlockAccount(eth.accounts[1]) - unlock the first and second accounts
+  - personal.unlockAccount(eth.accounts[0]) and personal.unlockAccount(eth.accounts[1]) - unlock the first and second accounts. We will be using the first and second account to deploy contracts, you can change this in /migrations/1_deploy_contracts.js
   - truffle migrate --network ropsten - deploy to ropsten (eth.accounts[0] and eth.accounts[1] need to have some coins)
   
 4. To start server run this in main directory:
